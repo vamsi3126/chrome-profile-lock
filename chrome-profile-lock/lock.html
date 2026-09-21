@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Locked - Chrome Profile Lock</title>
+  <link rel="stylesheet" href="lock.css">
+</head>
+<body>
+  <!-- Stealth Screensaver Overlay (Boss Key Mode - Esc) -->
+  <div class="stealth-screensaver" id="stealthScreensaver" style="display: none;" role="region" aria-label="Screensaver Mode">
+    <div class="stealth-content">
+      <div class="stealth-clock" id="stealthClock">--:--</div>
+      <div class="stealth-date" id="stealthDate">----------</div>
+      <div class="stealth-hint">Press <kbd>Esc</kbd> or click anywhere to unlock</div>
+    </div>
+  </div>
+
+  <div class="lock-wrapper">
+    <main class="lock-card" id="lockCard" role="region" aria-label="Profile Authentication">
+      
+      <!-- Digital Clock & Date Display -->
+      <div class="lock-clock-wrap" aria-live="polite">
+        <div class="lock-time" id="lockTime">--:--</div>
+        <div class="lock-date" id="lockDate">----------</div>
+      </div>
+
+      <!-- Profile Avatar / Icon Wrap -->
+      <div class="lock-icon-wrap" id="lockIconWrap" aria-hidden="true">
+        <span class="lock-avatar-text" id="lockAvatarText" style="display: none;">VG</span>
+        <svg id="defaultLockSvg" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      </div>
+
+      <!-- Header Information -->
+      <div class="lock-greeting" id="lockGreeting">Welcome</div>
+      <h1 class="lock-title">Profile Locked</h1>
+      <div class="profile-name" id="profileName">Vamsi Greeshma</div>
+      <p class="lock-subtitle" id="lockSubtitle">Enter your password to continue.</p>
+
+      <!-- Break-In Detection Notice -->
+      <div class="security-banner banner-warning" id="breakInBanner" style="display: none;" role="status">
+        <span class="banner-icon" aria-hidden="true">⚠️</span>
+        <span id="breakInText">Notice: Failed unlock attempts were detected while locked.</span>
+      </div>
+
+      <!-- Rate Limit / Lockout Countdown Banner -->
+      <div class="security-banner banner-lockout" id="lockoutBanner" style="display: none;" role="alert">
+        <span class="banner-icon" aria-hidden="true">⏳</span>
+        <span id="lockoutText">Too many attempts. Please wait 30 seconds.</span>
+      </div>
+
+      <!-- PIN Entry Container (Active in PIN mode) -->
+      <div class="pin-entry-wrap" id="pinEntryWrap" style="display: none;">
+        <div class="pin-dots" id="pinDots" aria-label="PIN digits entered">
+          <span class="pin-dot"></span>
+          <span class="pin-dot"></span>
+          <span class="pin-dot"></span>
+          <span class="pin-dot"></span>
+          <span class="pin-dot"></span>
+          <span class="pin-dot"></span>
+        </div>
+
+        <!-- Numeric On-Screen Keypad -->
+        <div class="numeric-keypad" id="numericKeypad" role="group" aria-label="Numeric Keypad">
+          <button type="button" class="keypad-btn" data-key="1">1</button>
+          <button type="button" class="keypad-btn" data-key="2">2</button>
+          <button type="button" class="keypad-btn" data-key="3">3</button>
+          <button type="button" class="keypad-btn" data-key="4">4</button>
+          <button type="button" class="keypad-btn" data-key="5">5</button>
+          <button type="button" class="keypad-btn" data-key="6">6</button>
+          <button type="button" class="keypad-btn" data-key="7">7</button>
+          <button type="button" class="keypad-btn" data-key="8">8</button>
+          <button type="button" class="keypad-btn" data-key="9">9</button>
+          <button type="button" class="keypad-btn keypad-func" id="keypadClearBtn" title="Clear digits">C</button>
+          <button type="button" class="keypad-btn" data-key="0">0</button>
+          <button type="button" class="keypad-btn keypad-func" id="keypadBackspaceBtn" title="Backspace">⌫</button>
+        </div>
+      </div>
+
+      <!-- Password Lock Form (Active in Password mode) -->
+      <form class="lock-form" id="lockForm" autocomplete="off" novalidate>
+        <div class="input-field-wrap">
+          <input 
+            type="password" 
+            id="passwordInput" 
+            class="text-input" 
+            placeholder="Password" 
+            autocomplete="current-password"
+            required 
+            autofocus
+          >
+          <button 
+            type="button" 
+            class="toggle-pwd-btn" 
+            id="togglePasswordBtn" 
+            aria-label="Toggle password visibility"
+            title="Show password"
+          >
+            <svg id="eyeIcon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Subtle Feedback Alert Area -->
+        <div class="alert-box" id="alertBox" role="alert" style="display: none;">
+          <span id="alertMessage">Incorrect password</span>
+        </div>
+
+        <!-- Unlock Button -->
+        <button type="submit" class="submit-btn" id="unlockBtn">
+          <span>Unlock</span>
+        </button>
+      </form>
+
+      <!-- Bottom Auxiliary Actions -->
+      <div class="lock-footer-actions">
+        <button type="button" class="footer-link-btn" id="toggleAuthModeBtn" style="display: none;">
+          Use PIN Instead
+        </button>
+        <button type="button" class="footer-link-btn" id="stealthBtn" title="Hide lock screen (Esc)">
+          Stealth (Esc)
+        </button>
+        <button type="button" class="footer-link-btn" id="panicCloseBtn" title="Close all open background tabs (Alt+P)">
+          Panic Exit
+        </button>
+        <button type="button" class="footer-link-btn" id="forgotPasswordBtn">
+          Forgot password?
+        </button>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Secure OTP Recovery Modal Dialog -->
+  <div class="modal-overlay" id="forgotModal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">Reset Profile Authentication</h2>
+        <button type="button" class="modal-close-btn" id="closeModalX" aria-label="Close">✕</button>
+      </div>
+
+      <!-- State 0: Automatic Profile Retrieval & OTP Sending Loading Screen -->
+      <div id="recoveryLoadingState" style="text-align: center; padding: 28px 12px;">
+        <div class="cpl-spinner"></div>
+        <p class="modal-desc" id="recoveryLoadingText" style="color: var(--text-primary); font-weight: 500; margin: 0 0 4px 0;">Retrieving profile email and sending OTP...</p>
+        <p class="modal-sub" id="recoveryLoadingSub" style="font-size: 13px; color: var(--text-secondary); margin: 0;">Connecting to Resend Email Service</p>
+        <div class="alert-box" id="recoveryLoadingAlert" style="display: none; margin-top: 16px;" role="alert"></div>
+        <div class="modal-actions" id="recoveryLoadingActions" style="display: none; justify-content: center; margin-top: 16px;">
+          <button type="button" class="btn btn-secondary" id="recoveryRetryBtn">Retry</button>
+          <button type="button" class="btn btn-secondary" id="recoveryCancelLoadingBtn">Close</button>
+        </div>
+      </div>
+
+      <!-- State 1: Fallback Manual Email Entry (Only shown if Chrome profile has no linked email) -->
+      <div id="recoveryNoEmailState" style="display: none;">
+        <p class="modal-desc">No email address is linked to this Chrome profile. Enter your email to receive a 6-digit verification code:</p>
+        <div class="form-group" style="margin: 14px 0;">
+          <label for="recoveryManualEmailInput" class="form-label">Email Address</label>
+          <div class="input-field-wrap">
+            <input type="email" id="recoveryManualEmailInput" class="text-input" placeholder="you@example.com" autocomplete="email">
+          </div>
+        </div>
+        <div class="alert-box" id="recoveryManualEmailAlert" style="display: none; margin-top: 12px;" role="alert"></div>
+        <div class="modal-actions" style="margin-top: 18px;">
+          <button type="button" class="btn btn-secondary" id="closeNoEmailBtn">Cancel</button>
+          <button type="button" class="btn btn-primary" id="continueManualEmailBtn">Send OTP</button>
+        </div>
+      </div>
+
+      <!-- State 2: Enter 6-Digit OTP -->
+      <div id="recoveryStep2" style="display: none;">
+        <p class="modal-desc" id="recoveryStep2Desc">A 6-digit verification code has been sent to <strong id="recoverySentEmailText" style="color: var(--accent-primary);">your profile email</strong>.</p>
+        <div class="form-group" style="margin: 14px 0;">
+          <label for="recoveryOtpInput" class="form-label">Verification Code (Expires in <span id="recoveryOtpTimer">5:00</span>)</label>
+          <div class="input-field-wrap">
+            <input type="text" id="recoveryOtpInput" class="text-input" placeholder="123456" maxlength="6" pattern="[0-9]{6}" inputmode="numeric" autocomplete="one-time-code">
+          </div>
+        </div>
+        <div class="alert-box" id="recoveryStep2Alert" style="display: none; margin-bottom: 12px;" role="alert"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="recoveryResendBtn">Resend Code</button>
+          <button type="button" class="btn btn-primary" id="verifyRecoveryOtpBtn">Verify OTP</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Set New Credential (Password or PIN) -->
+      <div id="recoveryStep3" style="display: none;">
+        <p class="modal-desc" id="recoveryStep3Desc">Enter and confirm your new credential.</p>
+        <form id="recoveryResetForm" autocomplete="off" novalidate style="margin-top: 14px;">
+          <!-- Password fields -->
+          <div id="recoveryPasswordFields">
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label for="recoveryNewPassword" class="form-label">New Password</label>
+              <div class="input-field-wrap">
+                <input type="password" id="recoveryNewPassword" class="text-input" placeholder="New master password (min. 6 characters)">
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label for="recoveryConfirmPassword" class="form-label">Confirm New Password</label>
+              <div class="input-field-wrap">
+                <input type="password" id="recoveryConfirmPassword" class="text-input" placeholder="Confirm new password">
+              </div>
+            </div>
+          </div>
+
+          <!-- PIN fields -->
+          <div id="recoveryPinFields" style="display: none;">
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label for="recoveryNewPin" class="form-label">New 6-Digit PIN</label>
+              <div class="input-field-wrap">
+                <input type="password" id="recoveryNewPin" class="text-input" placeholder="New 6-digit PIN" maxlength="6" pattern="[0-9]{6}" inputmode="numeric">
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label for="recoveryConfirmPin" class="form-label">Confirm New 6-Digit PIN</label>
+              <div class="input-field-wrap">
+                <input type="password" id="recoveryConfirmPin" class="text-input" placeholder="Confirm new 6-digit PIN" maxlength="6" pattern="[0-9]{6}" inputmode="numeric">
+              </div>
+            </div>
+          </div>
+
+          <div class="alert-box" id="recoveryStep3Alert" style="display: none; margin-bottom: 12px;" role="alert"></div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="cancelRecoveryResetBtn">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="submitRecoveryResetBtn">Reset Credential</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Step 4: Success Message -->
+      <div id="recoveryStep4" style="display: none; text-align: center;">
+        <div class="recovery-icon-circle" style="background: rgba(129, 201, 149, 0.15); color: #81c995;">✓</div>
+        <h3 style="color: #e8eaed; font-size: 16px; margin: 12px 0 6px 0;">Authentication Reset Complete</h3>
+        <p class="modal-sub" id="recoverySuccessSub">Your credential has been updated. You can now unlock your profile.</p>
+        <div class="modal-actions" style="justify-content: center; margin-top: 18px;">
+          <button type="button" class="btn btn-primary" id="recoveryFinishBtn">Unlock Profile Now</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="lock.js"></script>
+</body>
+</html>

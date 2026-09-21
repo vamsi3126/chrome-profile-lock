@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chrome Profile Lock - Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="options-container">
+    
+    <!-- Header -->
+    <header class="options-header">
+      <div class="header-brand">
+        <div class="header-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+        <div>
+          <h1 class="header-title">Chrome Profile Lock</h1>
+          <p class="header-subtitle">Privacy Layer & Profile Protection Settings</p>
+        </div>
+      </div>
+      
+      <!-- Lock Now Action Button -->
+      <div class="header-actions">
+        <button type="button" class="btn btn-lock-now" id="lockNowBtn" title="Immediately lock this profile">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <span>Lock Now</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Settings Sections Grid -->
+    <main class="options-grid">
+
+      <!-- TELEMETRY / LIVE METRICS DASHBOARD -->
+      <section class="metrics-overview" id="metricsOverview">
+        <div class="metric-card">
+          <div class="metric-icon">🔒</div>
+          <div class="metric-info">
+            <span class="metric-value" id="metricTotalLocks">0</span>
+            <span class="metric-label">Profile Locks</span>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon">🔓</div>
+          <div class="metric-info">
+            <span class="metric-value" id="metricTotalUnlocks">0</span>
+            <span class="metric-label">Successful Unlocks</span>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon">🛡️</div>
+          <div class="metric-info">
+            <span class="metric-value" id="metricBlockedIntrusions">0</span>
+            <span class="metric-label">Intrusions Prevented</span>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon">⏱️</div>
+          <div class="metric-info">
+            <span class="metric-value" id="metricLastActive">Active</span>
+            <span class="metric-label">Protection Status</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 1: PROFILE -->
+      <section class="settings-card" id="profileSection">
+        <div class="section-badge">PROFILE</div>
+        <h2 class="card-title">Profile Identity</h2>
+        <p class="card-desc">Customize your profile name and visual avatar badge.</p>
+        
+        <form id="profileNameForm" class="settings-form" autocomplete="off">
+          <div class="form-group">
+            <label for="profileNameInput" class="form-label">Display Name</label>
+            <div class="input-field-wrap">
+              <input 
+                type="text" 
+                id="profileNameInput" 
+                class="text-input" 
+                placeholder="Enter profile name" 
+                maxlength="40"
+                value="Vamsi Greeshma"
+              >
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="profileEmailInput" class="form-label">Profile Recovery Email</label>
+            <div class="input-field-wrap">
+              <input 
+                type="email" 
+                id="profileEmailInput" 
+                class="text-input" 
+                placeholder="Auto-detected from Google account or enter email" 
+                autocomplete="email"
+              >
+            </div>
+            <p class="form-help" id="profileEmailHelp" style="font-size: 12px; color: var(--text-secondary); margin-top: 5px;">Automatically used to send 6-digit OTP codes via Resend when resetting forgotten passwords.</p>
+          </div>
+
+          <!-- Avatar Picker -->
+          <div class="form-group">
+            <label class="form-label">Profile Avatar</label>
+            <div class="avatar-picker-grid" id="avatarPickerGrid">
+              <button type="button" class="avatar-option active" data-avatar="monogram" title="Initials">VG</button>
+              <button type="button" class="avatar-option" data-avatar="default" title="Default Lock">🔐</button>
+              <button type="button" class="avatar-option" data-avatar="🛡️" title="Shield">🛡️</button>
+              <button type="button" class="avatar-option" data-avatar="🕶️" title="Stealth">🕶️</button>
+              <button type="button" class="avatar-option" data-avatar="💻" title="Tech">💻</button>
+              <button type="button" class="avatar-option" data-avatar="🚀" title="Rocket">🚀</button>
+              <button type="button" class="avatar-option" data-avatar="⚡" title="Speed">⚡</button>
+              <button type="button" class="avatar-option" data-avatar="☕" title="Coffee">☕</button>
+              <button type="button" class="avatar-option" data-avatar="🎮" title="Gaming">🎮</button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="saveProfileBtn">
+            <span>Save Profile</span>
+          </button>
+        </form>
+      </section>
+
+      <!-- SECTION 2: SECURITY -->
+      <section class="settings-card" id="securitySection">
+        <div class="section-badge">SECURITY</div>
+        <h2 class="card-title">Advanced Security</h2>
+        <p class="card-desc">Configure authentication credentials, unlock methods, and access protections.</p>
+
+        <!-- Security Status Card -->
+        <div class="security-status-card" id="securityStatusCard">
+          <div class="status-card-header">SECURITY STATUS</div>
+          <div class="status-grid">
+            <div class="status-item">
+              <span class="status-item-label">🔒 Profile Protection</span>
+              <span class="status-item-value status-badge-active" id="statusProfileProtection">ON</span>
+            </div>
+            <div class="status-item">
+              <span class="status-item-label">🔑 Authentication</span>
+              <span class="status-item-value" id="statusAuthMode">Password</span>
+            </div>
+            <div class="status-item">
+              <span class="status-item-label">💤 System Idle Lock</span>
+              <span class="status-item-value" id="statusIdleLock">10 minutes</span>
+            </div>
+            <div class="status-item">
+              <span class="status-item-label">🚀 Startup Lock</span>
+              <span class="status-item-value status-badge-active" id="statusStartupLock">ON</span>
+            </div>
+            <div class="status-item">
+              <span class="status-item-label">🔊 Auto-Mute</span>
+              <span class="status-item-value status-badge-active" id="statusAutoMute">ON</span>
+            </div>
+            <div class="status-item">
+              <span class="status-item-label">🕒 Last Event</span>
+              <span class="status-item-value" id="statusLastEvent">Active</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Credential Management Action Buttons -->
+        <div class="form-group">
+          <label class="form-label">Credentials & Keys</label>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button type="button" class="btn btn-secondary" id="openChangePasswordModalBtn">
+              <span>🔐 Change Password</span>
+            </button>
+            <button type="button" class="btn btn-secondary" id="openChangePinModalBtn" style="display: none;">
+              <span>🔢 Change PIN</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Authentication Mode Selection -->
+        <div class="form-group" style="margin-top: 18px;">
+          <label class="form-label">Authentication Mode</label>
+          <p class="card-desc" style="margin-bottom: 10px;">Select primary unlock method. Switching modes requires verifying current credentials.</p>
+          <div class="auth-mode-selector">
+            <label class="auth-mode-radio" for="authModePasswordRadio">
+              <input type="radio" name="authModeSelect" id="authModePasswordRadio" value="password" checked>
+              <div class="auth-mode-card">
+                <span class="auth-mode-icon">🔑</span>
+                <span class="auth-mode-name">Full Password</span>
+                <span class="auth-mode-sub">Master passphrase</span>
+              </div>
+            </label>
+
+            <label class="auth-mode-radio" for="authModePinRadio">
+              <input type="radio" name="authModeSelect" id="authModePinRadio" value="pin">
+              <div class="auth-mode-card">
+                <span class="auth-mode-icon">🔢</span>
+                <span class="auth-mode-name">6-Digit PIN</span>
+                <span class="auth-mode-sub">Quick keypad PIN</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Security Guard Toggles -->
+        <div class="toggle-list" style="margin-top: 18px;">
+          <label class="toggle-item" for="protectSecuritySettingsToggle">
+            <div class="toggle-info">
+              <span class="toggle-title">🛡️ Require authentication to change security settings</span>
+              <span class="toggle-sub">Prompt for current password/PIN before modifying credentials, idle timeout, or resetting</span>
+            </div>
+            <input type="checkbox" id="protectSecuritySettingsToggle" class="switch-input" checked>
+          </label>
+
+          <label class="toggle-item" for="lockOnStartupToggle">
+            <div class="toggle-info">
+              <span class="toggle-title">🔄 Lock profile when Chrome starts</span>
+              <span class="toggle-sub">Engage lock screen immediately upon opening this profile</span>
+            </div>
+            <input type="checkbox" id="lockOnStartupToggle" class="switch-input" checked>
+          </label>
+        </div>
+
+        <!-- Backend Security API URL Configuration -->
+        <div class="form-group" style="margin-top: 20px;">
+          <label for="backendApiUrlInput" class="form-label">Backend Security API URL</label>
+          <p class="card-desc" style="margin-bottom: 8px;">Serverless endpoint for intrusion alert delivery and OTP recovery.</p>
+          <div style="display: flex; gap: 8px;">
+            <div class="input-field-wrap" style="flex: 1;">
+              <input type="url" id="backendApiUrlInput" class="text-input" placeholder="http://localhost:3000" value="http://localhost:3000">
+            </div>
+            <button type="button" class="btn btn-secondary" id="saveBackendUrlBtn">Save</button>
+            <button type="button" class="btn btn-secondary" id="testBackendBtn">Test API</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION: SECURITY EMAIL (Feature 2) -->
+      <section class="settings-card" id="securityEmailSection">
+        <div class="section-badge">SECURITY EMAIL</div>
+        <h2 class="card-title">Security Alert Email</h2>
+        <p class="card-desc">Receives instant warning notifications when 5 consecutive failed unlock attempts are detected.</p>
+
+        <!-- Case A: Chrome Profile Email Detected -->
+        <div id="detectedProfileEmailWrap" style="display: none;" class="email-status-card">
+          <div class="email-status-header">
+            <span class="status-badge-verified">✓ Google Profile Email Connected</span>
+          </div>
+          <div class="email-status-val" id="detectedProfileEmailText">user@gmail.com</div>
+          <p class="email-status-hint">This email will automatically receive intrusion alerts upon 5 failed unlock attempts.</p>
+        </div>
+
+        <!-- Case B: Chrome Profile Email Unavailable -> Manual Input & Verification -->
+        <div id="manualSecurityEmailWrap">
+          <p class="card-desc" id="manualEmailWarningText" style="color: #fdd663; margin-bottom: 12px;">⚠️ Chrome could not automatically determine your profile email.</p>
+          
+          <div id="securityEmailVerifiedStatus" style="display: none; margin-bottom: 14px;" class="email-status-card">
+            <div class="email-status-header">
+              <span class="status-badge-verified">✓ Verified Security Email</span>
+            </div>
+            <div class="email-status-val" id="verifiedSecurityEmailLabel">security@example.com</div>
+            <p class="email-status-hint">Active recipient for security intrusion alerts.</p>
+            <div style="margin-top: 10px;">
+              <button type="button" class="btn btn-secondary btn-sm" id="changeSecurityEmailBtn">Change Email</button>
+            </div>
+          </div>
+
+          <div id="securityEmailInputGroup">
+            <div class="form-group">
+              <label for="securityEmailInput" class="form-label">Enter Security Email</label>
+              <div style="display: flex; gap: 8px;">
+                <div class="input-field-wrap" style="flex: 1;">
+                  <input type="email" id="securityEmailInput" class="text-input" placeholder="security@example.com">
+                </div>
+                <button type="button" class="btn btn-primary" id="sendSecurityEmailCodeBtn">Verify Email</button>
+              </div>
+            </div>
+
+            <!-- Code verification form (appears after clicking Verify Email) -->
+            <div id="securityEmailCodeWrap" style="display: none; margin-top: 14px;">
+              <div class="form-group">
+                <label for="securityEmailCodeInput" class="form-label">Enter 6-Digit Verification Code</label>
+                <div style="display: flex; gap: 8px;">
+                  <div class="input-field-wrap" style="flex: 1;">
+                    <input type="text" id="securityEmailCodeInput" class="text-input" placeholder="123456" maxlength="6" pattern="[0-9]{6}">
+                  </div>
+                  <button type="button" class="btn btn-primary" id="verifySecurityEmailCodeBtn">Confirm Code</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION: RECOVERY EMAIL (Feature 4) -->
+      <section class="settings-card" id="recoveryEmailSection">
+        <div class="section-badge">RECOVERY EMAIL</div>
+        <h2 class="card-title">Password & PIN Recovery</h2>
+        <p class="card-desc">Configure a secondary recovery email used exclusively to reset your credentials via 6-digit cryptographic OTP if forgotten.</p>
+
+        <!-- Current Verified Recovery Email Display -->
+        <div id="recoveryEmailDisplayWrap" style="display: none;" class="email-status-card">
+          <div class="email-status-header">
+            <span class="status-badge-verified">✓ Recovery Email Verified</span>
+          </div>
+          <div class="email-status-val" id="currentRecoveryEmailText">v***@gmail.com</div>
+          <p class="email-status-hint">Used strictly for password/PIN recovery codes. Changing this requires entering your current master password or PIN.</p>
+          <div style="margin-top: 10px;">
+            <button type="button" class="btn btn-secondary btn-sm" id="changeRecoveryEmailBtn">Change Recovery Email</button>
+          </div>
+        </div>
+
+        <!-- Recovery Email Configuration / Verification Form -->
+        <div id="recoveryEmailSetupWrap">
+          <div class="form-group">
+            <label for="recoveryEmailInput" class="form-label">Secondary Recovery Email</label>
+            <div style="display: flex; gap: 8px;">
+              <div class="input-field-wrap" style="flex: 1;">
+                <input type="email" id="recoveryEmailInput" class="text-input" placeholder="recovery@example.com">
+              </div>
+              <button type="button" class="btn btn-primary" id="sendRecoveryVerificationCodeBtn">Send Verification Code</button>
+            </div>
+          </div>
+
+          <!-- Code verification form -->
+          <div id="recoveryCodeInputWrap" style="display: none; margin-top: 14px;">
+            <div class="form-group">
+              <label for="recoveryVerificationCodeInput" class="form-label">Enter Verification Code</label>
+              <div style="display: flex; gap: 8px;">
+                <div class="input-field-wrap" style="flex: 1;">
+                  <input type="text" id="recoveryVerificationCodeInput" class="text-input" placeholder="123456" maxlength="6" pattern="[0-9]{6}">
+                </div>
+                <button type="button" class="btn btn-primary" id="confirmRecoveryCodeBtn">Verify</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: AUTOMATIC LOCK -->
+      <section class="settings-card" id="autoLockSection">
+        <div class="section-badge">AUTOMATIC LOCK</div>
+        <h2 class="card-title">Idle Lock</h2>
+        <p class="card-desc">Automatically lock your profile when the browser or system becomes idle or inactive.</p>
+        
+        <!-- Idle Lock Toggle -->
+        <div class="toggle-list" style="margin-bottom: 16px;">
+          <label class="toggle-item" for="systemIdleLockToggle">
+            <div class="toggle-info">
+              <span class="toggle-title">🔒 Lock when idle</span>
+              <span class="toggle-sub">Automatically locks your profile after a period of user inactivity</span>
+            </div>
+            <input type="checkbox" id="systemIdleLockToggle" class="switch-input" checked>
+          </label>
+        </div>
+
+        <div class="form-group" id="systemIdleTimeoutGroup">
+          <label for="systemIdleTimeoutSelect" class="form-label">Lock after idle timeout:</label>
+          <select id="systemIdleTimeoutSelect" class="select-input">
+            <option value="60">1 minute</option>
+            <option value="120">2 minutes</option>
+            <option value="300">5 minutes</option>
+            <option value="600" selected>10 minutes</option>
+            <option value="900">15 minutes</option>
+            <option value="1800">30 minutes</option>
+            <option value="2700">45 minutes</option>
+            <option value="3600">1 hour</option>
+          </select>
+        </div>
+
+        <!-- Live Idle Lock Status Text -->
+        <div class="idle-status-box" id="idleStatusBox">
+          <span id="idleStatusText">Your profile will automatically lock after 10 minutes of inactivity.</span>
+        </div>
+      </section>
+
+      <!-- SECTION 4: PRIVACY -->
+      <section class="settings-card" id="privacySection">
+        <div class="section-badge">PRIVACY</div>
+        <h2 class="card-title">Privacy Controls</h2>
+        <p class="card-desc">Configure media muting, shoulder-surfing camouflage, and pre-lock alerts.</p>
+
+        <div class="toggle-list">
+          <!-- Checkbox: Privacy Auto-Mute -->
+          <label class="toggle-item" for="lockMuteAudioToggle">
+            <div class="toggle-info">
+              <span class="toggle-title">Mute all tabs when profile is locked</span>
+              <span class="toggle-sub">Automatically silence playing media or audio on all open tabs while locked</span>
+            </div>
+            <input type="checkbox" id="lockMuteAudioToggle" class="switch-input" checked>
+          </label>
+
+          <!-- Checkbox: Tab Title & Favicon Camouflage -->
+          <label class="toggle-item" for="lockCloakTitleToggle">
+            <div class="toggle-info">
+              <span class="toggle-title">Disguise tab titles & icons while locked</span>
+              <span class="toggle-sub">Temporarily renames tabs to "New Tab" so onlookers cannot read sensitive titles on Chrome's tab bar</span>
+            </div>
+            <input type="checkbox" id="lockCloakTitleToggle" class="switch-input" checked>
+          </label>
+
+          <!-- Checkbox: Inactivity warning toast -->
+          <label class="toggle-item" for="lockWarningToggle">
+            <div class="toggle-info">
+              <span class="toggle-title">Show 15-second inactivity warning</span>
+              <span class="toggle-sub">Displays a discreet toast before auto-locking so you can stay active</span>
+            </div>
+            <input type="checkbox" id="lockWarningToggle" class="switch-input" checked>
+          </label>
+        </div>
+      </section>
+
+      <!-- SECTION 5: APPEARANCE & THEMES -->
+      <section class="settings-card" id="themeSection">
+        <div class="section-badge">APPEARANCE</div>
+        <h2 class="card-title">Color Palette Theme</h2>
+        <p class="card-desc">Choose a dark theme for your lock screen and extension interfaces.</p>
+        
+        <div class="theme-picker-grid" id="themePickerGrid">
+          <button type="button" class="theme-card active" data-theme="chrome">
+            <div class="theme-preview theme-preview-chrome">
+              <div class="preview-dot"></div>
+              <div class="preview-bar"></div>
+            </div>
+            <span class="theme-name">Chrome Dark</span>
+            <span class="theme-sub">Default minimal</span>
+          </button>
+
+          <button type="button" class="theme-card" data-theme="oled">
+            <div class="theme-preview theme-preview-oled">
+              <div class="preview-dot"></div>
+              <div class="preview-bar"></div>
+            </div>
+            <span class="theme-name">OLED Pure Black</span>
+            <span class="theme-sub">True black #000</span>
+          </button>
+
+          <button type="button" class="theme-card" data-theme="navy">
+            <div class="theme-preview theme-preview-navy">
+              <div class="preview-dot"></div>
+              <div class="preview-bar"></div>
+            </div>
+            <span class="theme-name">Slate Navy</span>
+            <span class="theme-sub">Midnight ocean</span>
+          </button>
+
+          <button type="button" class="theme-card" data-theme="matrix">
+            <div class="theme-preview theme-preview-matrix">
+              <div class="preview-dot"></div>
+              <div class="preview-bar"></div>
+            </div>
+            <span class="theme-name">Cyber Terminal</span>
+            <span class="theme-sub">Emerald matrix</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- SECTION 6: SHORTCUTS -->
+      <section class="settings-card" id="shortcutsSection">
+        <div class="section-badge">SHORTCUTS</div>
+        <h2 class="card-title">Quick Lock Triggers</h2>
+        <p class="card-desc">Lock your profile instantly using keyboard shortcuts or your mouse.</p>
+
+        <div class="shortcut-box">
+          <div class="shortcut-keys">
+            <kbd class="key">Ctrl</kbd> + <kbd class="key">Shift</kbd> + <kbd class="key">L</kbd>
+          </div>
+          <span class="shortcut-mac">(On macOS: <kbd class="key">Cmd</kbd> + <kbd class="key">Shift</kbd> + <kbd class="key">L</kbd>)</span>
+        </div>
+        <p class="shortcut-sub">Instant lock from any webpage or tab. Customize at <code>chrome://extensions/shortcuts</code>.</p>
+
+        <label class="toggle-item" for="enableContextMenuLockToggle" style="margin-top: 14px;">
+          <div class="toggle-info">
+            <span class="toggle-title">🖱️ Browser Right-Click Menu Quick Lock</span>
+            <span class="toggle-sub">Show "🔒 Lock Chrome Profile Now" in Chrome's right-click context menu on web pages</span>
+          </div>
+          <input type="checkbox" id="enableContextMenuLockToggle" class="switch-input" checked>
+        </label>
+
+        <div class="shortcut-box" style="margin-top: 14px;">
+          <div class="shortcut-keys">
+            <kbd class="key">Alt</kbd> + <kbd class="key">P</kbd>
+          </div>
+          <span class="shortcut-mac">Emergency Panic Tab Cleaner (on Lock Screen)</span>
+        </div>
+      </section>
+
+      <!-- SECTION 7: SECURITY ACTIVITY LOG -->
+      <section class="settings-card" id="securityActivitySection">
+        <div class="section-header-wrap">
+          <div>
+            <div class="section-badge">AUDIT LOG</div>
+            <h2 class="card-title">Security Activity</h2>
+            <p class="card-desc">Displaying the latest 5 security events on this machine.</p>
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm" id="clearLogsBtn">Clear Log</button>
+        </div>
+
+        <div class="activity-list" id="activityList">
+          <div class="activity-empty">No recent activity recorded.</div>
+        </div>
+      </section>
+
+      <!-- SECTION 8: DANGER ZONE -->
+      <section class="settings-card danger-card" id="dangerZoneSection">
+        <div class="section-badge section-badge-danger">DANGER ZONE</div>
+        <h2 class="card-title">Reset Security Settings</h2>
+        <p class="card-desc">Clear all configured authentication credentials (password and PIN) and restore security settings to default. Requires your current password/PIN.</p>
+        
+        <div>
+          <button type="button" class="btn btn-danger" id="openResetSecurityModalBtn">
+            <span>⚠️ Reset Security Settings</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- SECTION 9: ABOUT -->
+      <section class="settings-card about-card" id="aboutSection">
+        <div class="section-badge">ABOUT</div>
+        <div class="about-content">
+          <div class="about-brand">
+            <div class="about-logo" aria-hidden="true">🔐</div>
+            <div>
+              <h2 class="about-app-name">Chrome Profile Lock</h2>
+              <div class="about-version">Version 2.0 Advanced Security</div>
+            </div>
+          </div>
+          <p class="about-quote">"Provides an additional privacy layer for this Chrome profile."</p>
+          <div class="about-footer-meta">
+            <span>Client-side Web Crypto API (PBKDF2 SHA-256)</span>
+            <span>•</span>
+            <span>Zero External Communication</span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Global Notification Toast -->
+    <div class="toast-box" id="toastBox" role="status" aria-live="polite" style="display: none;"></div>
+
+    <!-- ================================================================= -->
+    <!-- MODAL 1: CHANGE PASSWORD MODAL                                   -->
+    <!-- ================================================================= -->
+    <div class="modal-overlay" id="changePasswordModal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="changePasswordModalTitle">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 class="modal-title" id="changePasswordModalTitle">Change Password</h2>
+          <button type="button" class="modal-close-btn" id="closePasswordModalX" aria-label="Close">✕</button>
+        </div>
+        <p class="modal-desc">Enter your current master password, then choose a new one (min. 6 characters).</p>
+        
+        <form id="changePasswordModalForm" autocomplete="off" novalidate>
+          <div class="form-group">
+            <label for="modalCurrentPassword" class="form-label">Current Password</label>
+            <div class="input-field-wrap">
+              <input type="password" id="modalCurrentPassword" class="text-input" placeholder="Current password" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="modalNewPassword" class="form-label">New Password</label>
+            <div class="input-field-wrap">
+              <input type="password" id="modalNewPassword" class="text-input" placeholder="New password (min. 6 characters)" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="modalConfirmPassword" class="form-label">Confirm New Password</label>
+            <div class="input-field-wrap">
+              <input type="password" id="modalConfirmPassword" class="text-input" placeholder="Confirm new password" required>
+            </div>
+          </div>
+
+          <div class="alert-box" id="modalPasswordAlert" style="display: none;" role="alert"></div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="closePasswordModalBtn">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="submitChangePasswordBtn">Save Password</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- MODAL 2: CHANGE PIN MODAL                                        -->
+    <!-- ================================================================= -->
+    <div class="modal-overlay" id="changePinModal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="changePinModalTitle">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 class="modal-title" id="changePinModalTitle">Change 6-Digit PIN</h2>
+          <button type="button" class="modal-close-btn" id="closePinModalX" aria-label="Close">✕</button>
+        </div>
+        <p class="modal-desc">Enter your current PIN, then configure a new 6-digit numeric PIN.</p>
+        
+        <form id="changePinModalForm" autocomplete="off" novalidate>
+          <div class="form-group">
+            <label for="modalCurrentPin" class="form-label">Current 6-Digit PIN</label>
+            <div class="input-field-wrap">
+              <input type="password" id="modalCurrentPin" class="text-input" placeholder="Current 6-digit PIN" maxlength="6" pattern="[0-9]{6}" inputmode="numeric" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="modalNewPin" class="form-label">New 6-Digit PIN</label>
+            <div class="input-field-wrap">
+              <input type="password" id="modalNewPin" class="text-input" placeholder="New 6-digit PIN" maxlength="6" pattern="[0-9]{6}" inputmode="numeric" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="modalConfirmPin" class="form-label">Confirm New 6-Digit PIN</label>
+            <div class="input-field-wrap">
+              <input type="password" id="modalConfirmPin" class="text-input" placeholder="Confirm new 6-digit PIN" maxlength="6" pattern="[0-9]{6}" inputmode="numeric" required>
+            </div>
+          </div>
+
+          <div class="alert-box" id="modalPinAlert" style="display: none;" role="alert"></div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="closePinModalBtn">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="submitChangePinBtn">Save PIN</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- MODAL 3: SWITCH AUTHENTICATION MODE MODAL                         -->
+    <!-- ================================================================= -->
+    <div class="modal-overlay" id="switchAuthModeModal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="switchModeModalTitle">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 class="modal-title" id="switchModeModalTitle">Switch Authentication Mode</h2>
+          <button type="button" class="modal-close-btn" id="closeSwitchModeModalX" aria-label="Close">✕</button>
+        </div>
+        <p class="modal-desc" id="switchModeModalDesc">Verify your current credential to switch authentication mode.</p>
+        
+        <form id="switchAuthModeForm" autocomplete="off" novalidate>
+          <div class="form-group">
+            <label for="switchModeCurrentCred" class="form-label" id="switchModeCurrentLabel">Current Password/PIN</label>
+            <div class="input-field-wrap">
+              <input type="password" id="switchModeCurrentCred" class="text-input" placeholder="Current credential" required>
+            </div>
+          </div>
+
+          <!-- Fields when switching to PIN -->
+          <div id="switchToPinWrap" style="display: none;">
+            <div class="form-group">
+              <label for="switchToPinNew" class="form-label">Create New 6-Digit PIN</label>
+              <div class="input-field-wrap">
+                <input type="password" id="switchToPinNew" class="text-input" placeholder="New 6-digit PIN" maxlength="6" pattern="[0-9]{6}" inputmode="numeric">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="switchToPinConfirm" class="form-label">Confirm New 6-Digit PIN</label>
+              <div class="input-field-wrap">
+                <input type="password" id="switchToPinConfirm" class="text-input" placeholder="Confirm new 6-digit PIN" maxlength="6" pattern="[0-9]{6}" inputmode="numeric">
+              </div>
+            </div>
+          </div>
+
+          <!-- Fields when switching to Password -->
+          <div id="switchToPasswordWrap" style="display: none;">
+            <div class="form-group">
+              <label for="switchToPasswordNew" class="form-label">Create Master Password</label>
+              <div class="input-field-wrap">
+                <input type="password" id="switchToPasswordNew" class="text-input" placeholder="New master password (min. 6 characters)">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="switchToPasswordConfirm" class="form-label">Confirm Master Password</label>
+              <div class="input-field-wrap">
+                <input type="password" id="switchToPasswordConfirm" class="text-input" placeholder="Confirm master password">
+              </div>
+            </div>
+          </div>
+
+          <div class="alert-box" id="switchModeAlert" style="display: none;" role="alert"></div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="closeSwitchModeModalBtn">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="confirmSwitchModeBtn">Switch Mode</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- MODAL 4: PROTECTED SETTING VERIFICATION MODAL                     -->
+    <!-- ================================================================= -->
+    <div class="modal-overlay" id="securityVerifyModal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="verifyModalTitle">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 class="modal-title" id="verifyModalTitle">Security Verification</h2>
+          <button type="button" class="modal-close-btn" id="closeVerifyModalX" aria-label="Close">✕</button>
+        </div>
+        <p class="modal-desc">This setting is protected. Please enter your current password or PIN to proceed.</p>
+        
+        <form id="securityVerifyForm" autocomplete="off" novalidate>
+          <div class="form-group">
+            <label for="verifyCredentialInput" class="form-label">Enter Password or PIN</label>
+            <div class="input-field-wrap">
+              <input type="password" id="verifyCredentialInput" class="text-input" placeholder="Current credential" required autofocus>
+            </div>
+          </div>
+
+          <div class="alert-box" id="verifyModalAlert" style="display: none;" role="alert"></div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="closeVerifyModalBtn">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="confirmVerifyBtn">Verify & Proceed</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- MODAL 5: RESET SECURITY CONFIRMATION MODAL                        -->
+    <!-- ================================================================= -->
+    <div class="modal-overlay" id="resetSecurityModal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="resetModalTitle">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 class="modal-title" id="resetModalTitle" style="color: #f28b82;">Reset All Security Settings?</h2>
+          <button type="button" class="modal-close-btn" id="closeResetModalX" aria-label="Close">✕</button>
+        </div>
+        <p class="modal-desc">This will remove your configured authentication credentials and restore security preferences to their defaults. To authorize this reset, enter your current password or PIN:</p>
+        
+        <form id="resetSecurityForm" autocomplete="off" novalidate>
+          <div class="form-group">
+            <label for="resetCredentialInput" class="form-label">Current Password or PIN</label>
+            <div class="input-field-wrap">
+              <input type="password" id="resetCredentialInput" class="text-input" placeholder="Enter current credential to authorize" required>
+            </div>
+          </div>
+
+          <div class="alert-box" id="resetModalAlert" style="display: none;" role="alert"></div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="closeResetModalBtn">Cancel</button>
+            <button type="submit" class="btn btn-danger" id="confirmResetSecurityBtn">Reset Security</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

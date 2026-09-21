@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protect this Chrome Profile</title>
+  <link rel="stylesheet" href="setup.css">
+</head>
+<body>
+  <div class="setup-wrapper">
+    <main class="setup-card" id="setupCard" role="region" aria-label="Profile Setup">
+      <!-- Simple Clean Lock Icon -->
+      <div class="setup-icon-wrap" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      </div>
+
+      <h1 class="setup-title">Protect this Chrome Profile</h1>
+      <p class="setup-subtitle">Create a password to protect this profile.</p>
+
+      <!-- Setup Form -->
+      <form class="setup-form" id="setupForm" autocomplete="off" novalidate>
+        <!-- Password Field -->
+        <div class="form-group">
+          <label for="passwordInput" class="form-label">Password</label>
+          <div class="input-field-wrap">
+            <input 
+              type="password" 
+              id="passwordInput" 
+              class="text-input" 
+              placeholder="Enter password" 
+              autocomplete="new-password"
+              required
+              autofocus
+            >
+            <button type="button" class="toggle-pwd-btn" id="togglePasswordBtn" aria-label="Toggle password visibility" title="Show password">
+              <svg class="eye-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Confirm Password Field -->
+        <div class="form-group">
+          <label for="confirmPasswordInput" class="form-label">Confirm Password</label>
+          <div class="input-field-wrap">
+            <input 
+              type="password" 
+              id="confirmPasswordInput" 
+              class="text-input" 
+              placeholder="Confirm password" 
+              autocomplete="new-password"
+              required
+            >
+            <button type="button" class="toggle-pwd-btn" id="toggleConfirmPasswordBtn" aria-label="Toggle confirm password visibility" title="Show password">
+              <svg class="eye-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Show password checkbox option -->
+        <div class="show-password-option">
+          <label class="checkbox-label" for="showPasswordCheckbox">
+            <input type="checkbox" id="showPasswordCheckbox" class="checkbox-input">
+            <span class="checkbox-text">Show password</span>
+          </label>
+        </div>
+
+        <!-- Subtle Feedback alert box -->
+        <div class="alert-box" id="setupAlert" role="alert" style="display: none;"></div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="submit-btn" id="createPasswordBtn">
+          <span>Create Password</span>
+        </button>
+      </form>
+    </main>
+  </div>
+
+  <script src="setup.js"></script>
+</body>
+</html>

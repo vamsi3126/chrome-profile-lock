@@ -1,0 +1,79 @@
+{
+  "manifest_version": 3,
+  "name": "Chrome Profile Lock",
+  "version": "1.0.0",
+  "description": "A privacy layer that prompts for a password when a protected Chrome profile is opened.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_title": "Chrome Profile Lock"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "incognito": "spanning",
+  "commands": {
+    "lock-profile": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+L",
+        "mac": "Command+Shift+L"
+      },
+      "description": "Immediately lock this Chrome profile"
+    }
+  },
+  "permissions": [
+    "storage",
+    "tabs",
+    "alarms",
+    "contextMenus",
+    "idle",
+    "identity",
+    "identity.email"
+  ],
+  "host_permissions": [
+    "http://localhost/*",
+    "http://127.0.0.1/*",
+    "https://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "lock.html",
+        "lock.css",
+        "lock.js",
+        "icons/*"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
+}
