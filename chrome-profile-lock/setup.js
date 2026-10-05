@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       svg.appendChild(line);
     } else {
       const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      path1.setAttribute('d', 'M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z');
+      path1.setAttribute('d', 'M1,12 s4,-8 11,-8 s11,8 11,8 s-4,8 -11,8 s-11,-8 -11,-8z');
       const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       circle.setAttribute('cx', '12');
       circle.setAttribute('cy', '12');

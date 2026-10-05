@@ -108,6 +108,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   initPanicExit();
   await checkRateLimitAndBreakIn();
 
+  // Force focus on password input after page load.
+  // Chrome extension pages don't reliably honor the HTML autofocus attribute,
+  // so we programmatically focus the input with a short delay to ensure
+  // the cursor lands in the password box instead of the address bar.
+  if (passwordInput && activeAuthMode === 'password') {
+    setTimeout(() => {
+      passwordInput.focus();
+    }, 100);
+  }
+
   function initClockAndGreeting() {
     function updateClock() {
       const now = new Date();
@@ -485,7 +495,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       svg.appendChild(line);
     } else {
       const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      path1.setAttribute('d', 'M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z');
+      path1.setAttribute('d', 'M1,12 s4,-8 11,-8 s11,8 11,8 s-4,8 -11,8 s-11,-8 -11,-8z');
       const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       circle.setAttribute('cx', '12');
       circle.setAttribute('cy', '12');
